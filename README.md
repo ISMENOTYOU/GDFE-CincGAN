@@ -93,7 +93,7 @@ CUDA_VISIBLE_DEVICES=0 SRGAN_BATCH_SIZE=7 SRGAN_DATASET_DIR="./Unpaired henan" S
 CUDA_VISIBLE_DEVICES=0,1 SRGAN_BATCH_SIZE=14 SRGAN_DATASET_DIR="./Unpaired henan" SRGAN_SAVE_DIR=logs_dual_experiment python train.py
 ```
 
-DataParallel的batch是两卡总量，每卡7个样本。当前入口要求总batch可被可见GPU数量整除，且每卡至少2个样本；显存占用不保证恰好达到20GB。
+DataParallel的batch是两卡总量，每卡7个样本。当前入口要求总batch可被可见GPU数量整除，且每卡至少2个样本；
 
 ## 5. 环境变量
 
@@ -152,4 +152,4 @@ DataParallel的batch是两卡总量，每卡7个样本。当前入口要求总ba
 ```bash
 CUDA_VISIBLE_DEVICES=0 SRGAN_BATCH_SIZE=7 SRGAN_DATASET_DIR="./Unpaired henan" SRGAN_RESUME=logs_previous/training_last_checkpoint.pth SRGAN_SAVE_DIR=logs_continued python train.py
 ```
-`SRGAN_RESUME`不能与源码中六个单独模型路径同时使用。加载后从已完成轮数的下一轮继续，并恢复六网络、优化器和原调度配置；其中保存的总轮数会恢复，不应假定更改 `SRGAN_EPOCHS` 就能延长旧调度。
+`SRGAN_RESUME`不能与源码中六个单独模型路径同时使用。加载后从已完成轮数的下一轮继续，并恢复六网络、优化器和原调度配置；
