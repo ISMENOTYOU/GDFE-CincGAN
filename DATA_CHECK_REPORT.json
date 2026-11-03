@@ -1,0 +1,16 @@
+{
+  "dataset": "Unpaired henan",
+  "total_pairs": 450,
+  "checked_pairs": 450,
+  "errors": [],
+  "constant_arrays": 0,
+  "dtype_counts": {
+    "float64": 1350
+  },
+  "shape_counts": {
+    "(128, 128)": 900,
+    "(256, 256)": 450
+  },
+  "data_array_bytes": 354067200,
+  "semantic_alignment_verified": false
+}

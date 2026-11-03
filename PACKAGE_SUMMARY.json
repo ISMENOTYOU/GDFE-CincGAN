@@ -1,0 +1,23 @@
+{
+  "dataset": "Unpaired henan",
+  "training_pairs": 450,
+  "training_arrays": 1350,
+  "training_array_bytes": 354067200,
+  "verified_copies": 1361,
+  "verified_copy_bytes": 354198160,
+  "version": "Latest user-provided code with new dataset path and rebuilt filename lists",
+  "scope": "Current training only",
+  "core_sources": [
+    "train.py",
+    "run_supervised_baseline.sh",
+    "nets/srgan.py",
+    "utils/callbacks.py",
+    "utils/dataloader.py",
+    "utils/utils_fit1.py",
+    "utils/utils_metrics.py",
+    "utils/utils.py"
+  ],
+  "data_validation_errors": 0,
+  "constant_arrays": 0,
+  "semantic_alignment_verified": false
+}

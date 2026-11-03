@@ -1,0 +1,12 @@
+# Install the appropriate PyTorch CPU/CUDA build for your machine first.
+# This is a dependency range, not a fully locked reproduction environment.
+torch>=1.12,<3
+numpy>=1.23,<2
+matplotlib>=3.5
+scipy>=1.9
+opencv-python>=4.6
+tqdm>=4.60
+Pillow>=9
+einops>=0.6
+tensorboard>=2.10
+
