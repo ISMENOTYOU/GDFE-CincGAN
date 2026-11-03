@@ -18,17 +18,6 @@ LR：带噪低分辨率输入，128×128
                 ▼
        SR：256×256重建结果
 ```
-
-| 网络 | 作用 |
-|---|---|
-| G1 | 将LR转换为接近NLR的低分辨率数据 |
-| G2 | 将G1结果重建回LR，提供逆映射和循环约束 |
-| D2 | 区分真实NLR与G1结果 |
-| G | 将去噪结果放大为二倍超分辨率结果 |
-| F | 将SR重建回LR，提供逆映射和循环约束 |
-| D | 区分真实HR与G结果 |
-
-
 ## 2. 目录结构
 
 ```text
@@ -73,8 +62,7 @@ python -c "import torch; print(torch.__version__); print(torch.cuda.is_available
 
 参见[PyTorch安装说明](https://pytorch.org/get-started/locally/)。依赖文件是版本范围，不是完整锁定的复现实验环境。
 
-当前入口默认 `Cuda=True`，需要可用CUDA环境。代码支持单卡与 `DataParallel`；`distributed=True` 或 `fp16=True` 会明确报错，当前未提供DDP和混合精度实现。VGG感知损失未参与当前损失，因此代码不加载VGG，也不需要下载其预训练权重。
-
+当前入口默认 `Cuda=True`，需要可用CUDA环境。
 ## 4. 默认300轮训练
 
 进入仓库根目录执行：
@@ -157,18 +145,11 @@ DataParallel的batch是两卡总量，每卡7个样本。当前入口要求总ba
 - G/G1带轮数的文件分别保留；两个 `last_epoch` 推理权重每轮更新。
 - `training_last_checkpoint.pth`每轮覆盖更新，包含六个模型、六个优化器、已完成轮数、损失阶段配置和学习率调度配置。
 - PNG是固定训练样本0的五栏图：LR、NLR、G1去噪、G超分辨率和HR。
-- JSON记录该样本评估模式下的数值范围、标准差、接近±1的比例和误差/指标。
-- NPZ包含归一化的LR、NLR、去噪结果、SR和HR，不是原始物理振幅。
 - TXT中的训练指标来自训练批次；`sample_*`来自固定训练样本的评估模式，二者不能等同于独立验证集成绩。
-
-非有限输入、输出、损失或梯度会触发错误；固定样本近乎常量或饱和时会警告。这些保护不能保证训练不会退化。
 
 ## 7. 完整检查点续训
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 SRGAN_BATCH_SIZE=7 SRGAN_DATASET_DIR="./Unpaired henan" SRGAN_RESUME=logs_previous/training_last_checkpoint.pth SRGAN_SAVE_DIR=logs_continued python train.py
 ```
-
 `SRGAN_RESUME`不能与源码中六个单独模型路径同时使用。加载后从已完成轮数的下一轮继续，并恢复六网络、优化器和原调度配置；其中保存的总轮数会恢复，不应假定更改 `SRGAN_EPOCHS` 就能延长旧调度。
-
-没有显式设置的损失阶段环境变量会从检查点恢复，显式设置的变量优先。检查点没有保存所有随机数状态，不保证恢复后数据顺序或结果逐位复现。旧版只有G、G1权重时，无法完整恢复六网络训练。
