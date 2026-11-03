@@ -1,0 +1,48 @@
+
+name: Auto Delete GDFE-CincGAN
+
+on:
+  schedule:
+    - cron: '27 2 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  delete-repository:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check expiration and delete
+        env:
+          GH_TOKEN: ${{ secrets.REPO_DELETE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Manual tests never delete the repository
+          if [[ "$GITHUB_EVENT_NAME" != "schedule" ]]; then
+            echo "Manual test only: no deletion."
+            exit 0
+          fi
+
+          # Only allow the intended repository
+          if [[ "$GITHUB_REPOSITORY" != "LZYYYD/GDFE-CincGAN" ]]; then
+            echo "Repository mismatch."
+            exit 1
+          fi
+
+          TODAY=$(date -u +%Y-%m-%d)
+          DELETE_DATE="2027-02-03"
+
+          if [[ "$TODAY" < "$DELETE_DATE" ]]; then
+            echo "Repository has not expired."
+            exit 0
+          fi
+
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo "Deletion token is missing."
+            exit 1
+          fi
+
+          gh api -X DELETE \
+            "/repos/${GITHUB_REPOSITORY}"
